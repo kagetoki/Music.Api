@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  music.api:
+    image: music.api
+    build:
+      context: ./Music.Api
+      dockerfile: Dockerfile
