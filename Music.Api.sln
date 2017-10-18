@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.Api", "Music.Api\Musi
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8D2FBC79-8DCF-4F98-8876-CA9C8FDC7B90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.API.Interface", "..\Music.API.Interface\Music.API.Interface.csproj", "{F8D08DCB-2DA8-4DC4-8FE7-3563D71A2654}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.Services", "Music.API.Services\Music.API.Services.csproj", "{C0F71302-BE8F-43E9-875E-8AD022089C18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.API.Services", "Music.API.Services\Music.API.Services.csproj", "{C0F71302-BE8F-43E9-875E-8AD022089C18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.Interface", "Music.API.Interface\Music.API.Interface.csproj", "{D46BDB32-0BA3-4133-B830-1CCAB456277A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +25,14 @@ Global
 		{8D2FBC79-8DCF-4F98-8876-CA9C8FDC7B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2FBC79-8DCF-4F98-8876-CA9C8FDC7B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D2FBC79-8DCF-4F98-8876-CA9C8FDC7B90}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F8D08DCB-2DA8-4DC4-8FE7-3563D71A2654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8D08DCB-2DA8-4DC4-8FE7-3563D71A2654}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8D08DCB-2DA8-4DC4-8FE7-3563D71A2654}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8D08DCB-2DA8-4DC4-8FE7-3563D71A2654}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C0F71302-BE8F-43E9-875E-8AD022089C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C0F71302-BE8F-43E9-875E-8AD022089C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0F71302-BE8F-43E9-875E-8AD022089C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0F71302-BE8F-43E9-875E-8AD022089C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D46BDB32-0BA3-4133-B830-1CCAB456277A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D46BDB32-0BA3-4133-B830-1CCAB456277A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D46BDB32-0BA3-4133-B830-1CCAB456277A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D46BDB32-0BA3-4133-B830-1CCAB456277A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

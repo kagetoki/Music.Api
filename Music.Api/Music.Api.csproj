@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Music.API.Interface\Music.API.Interface.csproj" />
+    <ProjectReference Include="..\Music.API.Interface\Music.API.Interface.csproj" />
     <ProjectReference Include="..\Music.API.Services\Music.API.Services.csproj" />
   </ItemGroup>
 

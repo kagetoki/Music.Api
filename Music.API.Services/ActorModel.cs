@@ -3,7 +3,7 @@
 namespace Music.API.Services
 {
 
-    public class Class1
+    public class ActorModel
     {
         void T()
         {
