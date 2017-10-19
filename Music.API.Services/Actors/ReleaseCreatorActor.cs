@@ -1,9 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Messages;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Music.API.Services.Actors
 {
@@ -23,10 +20,14 @@ namespace Music.API.Services.Actors
             {
                 return false;
             }
-            //Pass some Props with info of creation and id. Maybe generate initial state of actor
-            //combining info from creation and _nextReleaseId
-            Context.ActorOf<ReleaseActor>();
-            throw new NotImplementedException();
+            
+            Persist(_nextReleaseId, (nextId) =>
+            {
+                var child = Context.ActorOf(Props.Create(() => new ReleaseActor(_nextReleaseId, msg)));
+                _nextReleaseId++;
+            });
+            
+            return true;
         }
 
         private bool IsMessageValid(ReleaseCreateMessage msg)

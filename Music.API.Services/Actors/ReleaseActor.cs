@@ -4,6 +4,8 @@ using Music.API.Interface.Messages;
 using Music.API.Interface.States;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 
 namespace Music.API.Services.Actors
@@ -11,23 +13,56 @@ namespace Music.API.Services.Actors
     public class ReleaseActor : ReceivePersistentActor
     {
         private Release _state;
-        public ReleaseActor()
+        public ReleaseActor(long id, ReleaseCreateMessage createMessage)
         {
             Command<ReleaseUpdateMessage>(msg => HandleUpdateMessage(msg));
             Recover<ReleaseUpdateMessage>(msg => HandleUpdateMessage(msg));
+            _state = new Release
+            {
+                Artist = createMessage.Artist,
+                Cover = createMessage.Cover,
+                Genre = createMessage.Genre,
+                ReleaseId = id.ToString(),
+                Timestamp = createMessage.Timestamp,
+                Title = createMessage.Title
+            };
         }
 
         public override string PersistenceId => _state.ReleaseId;
+        
         private void HandleUpdateMessage(ReleaseUpdateMessage msg)
         {
             if (IsMessageValid(msg))
             {
                 Persist(msg, m => 
                 {
-                    //update state
-
-                    //should I store here to db or it's automatic?
+                    UpdateState(m);
                 });
+            }
+        }
+
+        private void UpdateState(params ReleaseUpdateMessage[] messages)
+        {
+            var stream = messages.OrderBy(m => m.Timestamp);
+            foreach(var msg in stream)
+            {
+                if (!string.IsNullOrEmpty(msg.Title))
+                {
+                    _state.Title = msg.Title;
+                }
+                if (!string.IsNullOrEmpty(msg.Artist))
+                {
+                    _state.Artist = msg.Artist;
+                }
+                if (!string.IsNullOrEmpty(msg.Genre))
+                {
+                    _state.Genre = msg.Genre;
+                }
+                if (msg.Cover != null)
+                {
+                    _state.Cover = msg.Cover;
+                }
+                _state.Timestamp = msg.Timestamp;
             }
         }
 
