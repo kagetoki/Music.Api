@@ -1,6 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
-using Music.API.Interface.Messages;
+using Music.API.Interface.Commands;
 using Music.API.Interface.States;
 using System;
 using System.Collections.Generic;
@@ -13,10 +13,10 @@ namespace Music.API.Services.Actors
     public class ReleaseActor : ReceivePersistentActor
     {
         private Release _state;
-        public ReleaseActor(long id, ReleaseCreateMessage createMessage)
+        public ReleaseActor(long id, ReleaseCreateCommand createMessage)
         {
-            Command<ReleaseUpdateMessage>(msg => HandleUpdateMessage(msg));
-            Recover<ReleaseUpdateMessage>(msg => HandleUpdateMessage(msg));
+            Command<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
+            Recover<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
             _state = new Release
             {
                 Artist = createMessage.Artist,
@@ -30,7 +30,7 @@ namespace Music.API.Services.Actors
 
         public override string PersistenceId => _state.ReleaseId;
         
-        private void HandleUpdateMessage(ReleaseUpdateMessage msg)
+        private void HandleUpdateMessage(ReleaseUpdateCommand msg)
         {
             if (IsMessageValid(msg))
             {
@@ -41,7 +41,7 @@ namespace Music.API.Services.Actors
             }
         }
 
-        private void UpdateState(params ReleaseUpdateMessage[] messages)
+        private void UpdateState(params ReleaseUpdateCommand[] messages)
         {
             var stream = messages.OrderBy(m => m.Timestamp);
             foreach(var msg in stream)
@@ -66,7 +66,7 @@ namespace Music.API.Services.Actors
             }
         }
 
-        private bool IsMessageValid(ReleaseUpdateMessage msg)
+        private bool IsMessageValid(ReleaseUpdateCommand msg)
         {
             if(msg == null || msg.ReleaseId != PersistenceId)
             { return false; }

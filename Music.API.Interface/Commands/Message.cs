@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Music.API.Interface.Messages
+namespace Music.API.Interface.Commands
 {
-    public class Message
+    public class Command
     {
         public DateTime Timestamp { get; private set; }
-        public Message()
+        public Command()
         {
             Timestamp = DateTime.UtcNow;
         }

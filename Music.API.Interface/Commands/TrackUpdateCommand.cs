@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Music.API.Interface.Messages
+namespace Music.API.Interface.Commands
 {
-    public class TrackUpdateMessage : Message
+    public class TrackUpdateCommand : Command
     {
         public string TrackId { get; private set; }
         public byte[] Binary { get; private set; }
-        public TrackUpdateMessage(string trackId, byte[] binary)
+        public TrackUpdateCommand(string trackId, byte[] binary)
         {
             TrackId = trackId;
             Binary = binary;

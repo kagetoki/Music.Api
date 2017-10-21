@@ -1,6 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
-using Music.API.Interface.Messages;
+using Music.API.Interface.Commands;
 
 namespace Music.API.Services.Actors
 {
@@ -11,10 +11,10 @@ namespace Music.API.Services.Actors
 
         public ReleaseCreatorActor()
         {
-            Command<ReleaseCreateMessage>(msg => HandleCreateMessage(msg));
+            Command<ReleaseCreateCommand>(msg => HandleCreateMessage(msg));
         }
 
-        private bool HandleCreateMessage(ReleaseCreateMessage msg)
+        private bool HandleCreateMessage(ReleaseCreateCommand msg)
         {
             if (!IsMessageValid(msg))
             {
@@ -30,7 +30,7 @@ namespace Music.API.Services.Actors
             return true;
         }
 
-        private bool IsMessageValid(ReleaseCreateMessage msg)
+        private bool IsMessageValid(ReleaseCreateCommand msg)
         {
             return msg != null && !string.IsNullOrEmpty(msg.Artist)
                                && !string.IsNullOrEmpty(msg.Genre)

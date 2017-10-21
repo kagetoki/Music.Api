@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Music.API.Interface.Messages
+namespace Music.API.Interface.Commands
 {
-    public class MetadataCreateMessage : Message
+    public class MetadataUpdateCommand : Command
     {
+        public string TrackId { get; private set; }
         public string Title { get; private set; }
         public string Genre { get; private set; }
         public string Artist { get; private set; }
         public string Album { get; private set; }
-        public MetadataCreateMessage(string trackId, string artist, string album, string title, string genre)
+        public MetadataUpdateCommand(string trackId, string artist, string album, string title, string genre)
         {
+            TrackId = trackId;
             Artist = artist;
             Album = album;
             Title = title;
