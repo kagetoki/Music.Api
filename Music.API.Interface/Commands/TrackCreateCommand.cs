@@ -7,7 +7,8 @@ namespace Music.API.Interface.Commands
     public class TrackCreateCommand : Command
     {
         public byte[] Binary { get; private set; }
-        public TrackCreateCommand(byte[] track = null)
+
+        public TrackCreateCommand(byte[] track)
         {
             Binary = track;
         }

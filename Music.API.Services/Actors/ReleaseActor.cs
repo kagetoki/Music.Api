@@ -1,7 +1,9 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Commands;
-using Music.API.Interface.States;
+using Music.API.Interface.Models;
+using Music.API.Services.Messages;
+using Music.API.Services.States;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -12,73 +14,64 @@ namespace Music.API.Services.Actors
 {
     public class ReleaseActor : ReceivePersistentActor
     {
-        private Release _state;
-        public ReleaseActor(long id, ReleaseCreateCommand createMessage)
+        private ActorPath _readStorageUpdateActor;
+        private ReleaseState _state;
+        public ReleaseActor(long id, ReleaseCreateCommand createMessage, ActorPath readStorageUpdateActor)
         {
+            _readStorageUpdateActor = readStorageUpdateActor;
             Command<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
             Recover<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
-            _state = new Release
-            {
-                Artist = createMessage.Artist,
-                Cover = createMessage.Cover,
-                Genre = createMessage.Genre,
-                ReleaseId = id.ToString(),
-                Timestamp = createMessage.Timestamp,
-                Title = createMessage.Title
-            };
+            _state = new ReleaseState
+            (
+                id.ToString(),
+                createMessage.Artist,
+                createMessage.Title,
+                createMessage.Genre,
+                createMessage.Cover
+            );
+            TellStateUpdated();
         }
 
         public override string PersistenceId => _state.ReleaseId;
         
-        private void HandleUpdateMessage(ReleaseUpdateCommand msg)
+        private bool HandleUpdateMessage(ReleaseUpdateCommand cmd)
         {
-            if (IsMessageValid(msg))
+            if (IsMessageValid(cmd))
             {
-                Persist(msg, m => 
+                Persist(cmd, c => 
                 {
-                    UpdateState(m);
+                    UpdateState(c);
+                    TellStateUpdated();
                 });
+                return true;
             }
+            return false;
         }
 
-        private void UpdateState(params ReleaseUpdateCommand[] messages)
+        private void TellStateUpdated()
         {
-            var stream = messages.OrderBy(m => m.Timestamp);
-            foreach(var msg in stream)
-            {
-                if (!string.IsNullOrEmpty(msg.Title))
-                {
-                    _state.Title = msg.Title;
-                }
-                if (!string.IsNullOrEmpty(msg.Artist))
-                {
-                    _state.Artist = msg.Artist;
-                }
-                if (!string.IsNullOrEmpty(msg.Genre))
-                {
-                    _state.Genre = msg.Genre;
-                }
-                if (msg.Cover != null)
-                {
-                    _state.Cover = msg.Cover;
-                }
-                _state.Timestamp = msg.Timestamp;
-            }
+            var selection = Context.ActorSelection(_readStorageUpdateActor);
+            selection.Tell(_state, Context.Self);
         }
 
-        private bool IsMessageValid(ReleaseUpdateCommand msg)
+        private void UpdateState(ReleaseUpdateCommand command)
         {
-            if(msg == null || msg.ReleaseId != PersistenceId)
+            _state = _state.Update(command);
+        }
+
+        private bool IsMessageValid(ReleaseUpdateCommand cmd)
+        {
+            if(cmd == null || cmd.ReleaseId != PersistenceId)
             { return false; }
-            if(_state.Timestamp >= msg.Timestamp)
+            if(_state.Timestamp >= cmd.Timestamp)
             {
                 return false;
             }
             //Something has to be updated, otherwise nothing changes and we don't need this message
-            return !string.IsNullOrEmpty(msg.Title)
-                    || !string.IsNullOrEmpty(msg.Genre)
-                    || !string.IsNullOrEmpty(msg.Artist)
-                    || msg.Cover != null;
+            return !string.IsNullOrEmpty(cmd.Title)
+                    || !string.IsNullOrEmpty(cmd.Genre)
+                    || !string.IsNullOrEmpty(cmd.Artist)
+                    || cmd.Cover != null;
         }
     }
 }

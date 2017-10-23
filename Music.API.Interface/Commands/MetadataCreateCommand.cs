@@ -10,12 +10,14 @@ namespace Music.API.Interface.Commands
         public string Genre { get; private set; }
         public string Artist { get; private set; }
         public string Album { get; private set; }
+        public string TrackId { get; private set; }
         public MetadataCreateCommand(string trackId, string artist, string album, string title, string genre)
         {
             Artist = artist;
             Album = album;
             Title = title;
             Genre = genre;
+            TrackId = trackId;
         }
     }
 }

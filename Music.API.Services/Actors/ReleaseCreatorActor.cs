@@ -7,34 +7,35 @@ namespace Music.API.Services.Actors
     public class ReleaseCreatorActor : ReceivePersistentActor
     {
         private long _nextReleaseId;
-        public override string PersistenceId => "release";
-
-        public ReleaseCreatorActor()
+        public override string PersistenceId => "releases";
+        private ActorPath _readStorageUpdateActor;
+        public ReleaseCreatorActor(ActorPath readStorageUpdateActor)
         {
-            Command<ReleaseCreateCommand>(msg => HandleCreateMessage(msg));
+            _readStorageUpdateActor = readStorageUpdateActor;
+            Command<ReleaseCreateCommand>(cmd => HandleCreateMessage(cmd));
         }
 
-        private bool HandleCreateMessage(ReleaseCreateCommand msg)
+        private bool HandleCreateMessage(ReleaseCreateCommand cmd)
         {
-            if (!IsMessageValid(msg))
+            if (!IsMessageValid(cmd))
             {
                 return false;
             }
-            
-            Persist(_nextReleaseId, (nextId) =>
+            PersistAsync(cmd, c => { });
+            _nextReleaseId++;
+            PersistAsync(_nextReleaseId, (nextId) =>
             {
-                var child = Context.ActorOf(Props.Create(() => new ReleaseActor(_nextReleaseId, msg)));
-                _nextReleaseId++;
+                var child = Context.ActorOf(Props.Create(() => new ReleaseActor(nextId, cmd, _readStorageUpdateActor)));
+                
             });
-            
             return true;
         }
 
-        private bool IsMessageValid(ReleaseCreateCommand msg)
+        private bool IsMessageValid(ReleaseCreateCommand cmd)
         {
-            return msg != null && !string.IsNullOrEmpty(msg.Artist)
-                               && !string.IsNullOrEmpty(msg.Genre)
-                               && !string.IsNullOrEmpty(msg.Title);
+            return cmd != null && !string.IsNullOrEmpty(cmd.Artist)
+                               && !string.IsNullOrEmpty(cmd.Genre)
+                               && !string.IsNullOrEmpty(cmd.Title);
         }
     }
 }
