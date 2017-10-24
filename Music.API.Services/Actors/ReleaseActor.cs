@@ -1,14 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Commands;
-using Music.API.Interface.Models;
-using Music.API.Services.Messages;
 using Music.API.Services.States;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
 
 namespace Music.API.Services.Actors
 {
@@ -16,19 +9,12 @@ namespace Music.API.Services.Actors
     {
         private ActorPath _readStorageUpdateActor;
         private ReleaseState _state;
-        public ReleaseActor(long id, ReleaseCreateCommand createMessage, ActorPath readStorageUpdateActor)
+        public ReleaseActor(ReleaseState state, ActorPath readStorageUpdateActor)
         {
             _readStorageUpdateActor = readStorageUpdateActor;
             Command<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
             Recover<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
-            _state = new ReleaseState
-            (
-                id.ToString(),
-                createMessage.Artist,
-                createMessage.Title,
-                createMessage.Genre,
-                createMessage.Cover
-            );
+            _state = state;
             TellStateUpdated();
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace Music.API.Services.Events
 {
-    public class ReleaseCreated : CreatedEvent
+    public class ReleaseCreated : Event
     {
         public string ReleaseId { get; set; }
         public string Artist { get; set; }

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Music.API.Services.Events
 {
-    public abstract class Event
+    public class Update<T>
     {
-        public DateTime Timestamp { get; set; }
+        public T OldValue { get; set; }
+        public T NewValue { get; set; }
     }
-    
 }

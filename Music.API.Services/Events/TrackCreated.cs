@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Music.API.Services.Events
 {
-    public class TrackCreated : CreatedEvent
+    public class TrackCreated : Event
     {
         public string TrackId { get; set; }
         public string ReleaseId { get; set; }

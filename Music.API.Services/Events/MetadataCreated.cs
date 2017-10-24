@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Music.API.Services.Events
 {
-    public class MetadataCreated : CreatedEvent
+    public class MetadataCreated : Event
     {
         public string Title { get; set; }
         public string Genre { get; set; }

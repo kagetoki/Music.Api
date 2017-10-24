@@ -1,11 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Commands;
-using Music.API.Services.Messages;
 using Music.API.Services.States;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Music.API.Services.Actors
 {

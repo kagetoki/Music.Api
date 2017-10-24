@@ -1,6 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Commands;
+using Music.API.Services.States;
 
 namespace Music.API.Services.Actors
 {
@@ -25,7 +26,15 @@ namespace Music.API.Services.Actors
             _nextReleaseId++;
             PersistAsync(_nextReleaseId, (nextId) =>
             {
-                var child = Context.ActorOf(Props.Create(() => new ReleaseActor(nextId, cmd, _readStorageUpdateActor)));
+                var state = new ReleaseState
+                (
+                    nextId.ToString(),
+                    cmd.Artist,
+                    cmd.Title,
+                    cmd.Genre,
+                    cmd.Cover
+                );
+                var child = Context.ActorOf(Props.Create(() => new ReleaseActor(state, _readStorageUpdateActor)));
                 
             });
             return true;
