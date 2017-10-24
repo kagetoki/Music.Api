@@ -1,6 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Commands;
+using Music.API.Services.Events;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,12 +26,17 @@ namespace Music.API.Services.Actors
                 return false;
             }
             ++_nextTrackId;
-            PersistAsync(_nextTrackId, c => { });
-            PersistAsync(cmd, c =>
+            var trackCreatedEvt = new TrackCreated
             {
-                var trackId = (_nextTrackId).ToString();
+                Binary = cmd.Binary,
+                Timestamp = cmd.Timestamp,
+                TrackId = _nextTrackId.ToString(),
+            };
+            var state = new States.TrackState(trackCreatedEvt.TrackId, trackCreatedEvt.Binary);
+            PersistAsync(trackCreatedEvt, c =>
+            {
                 Context.ActorOf(Props.Create(() => 
-                                new TrackActor(trackId, cmd, _readStorageUpdateActor)), trackId);
+                                new TrackActor(state, _readStorageUpdateActor)), trackCreatedEvt.TrackId);
             });
             return true;
         }
