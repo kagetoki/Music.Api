@@ -1,6 +1,7 @@
 ﻿using Music.API.Interface.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 
@@ -13,6 +14,7 @@ namespace Music.API.Services.States
         public byte[] Cover { get; private set; }
         public string Title { get; private set; }
         public string Genre { get; private set; }
+        public ImmutableDictionary<string, MetadataState> TrackList { get; private set; }
         
         public ReleaseState(string releaseId, string artist, string title, string genre, byte[] cover = null)
         {
@@ -32,6 +34,7 @@ namespace Music.API.Services.States
             this.Genre = copyFrom.Genre;
             this.Title = copyFrom.Title;
             this.Timestamp = copyFrom.Timestamp;
+            this.TrackList = copyFrom.TrackList;
         }
 
         public ReleaseState Update(params ReleaseUpdateCommand[] commands)
@@ -62,6 +65,24 @@ namespace Music.API.Services.States
                 }
                 state.Timestamp = cmd.Timestamp;
             }
+            return state;
+        }
+
+        public ReleaseState AddMetadata(MetadataCreateCommand command)
+        {
+            if (this.TrackList.ContainsKey(command.TrackId) || command.Timestamp <= this.Timestamp)
+            {
+                return this;
+            }
+            var state = new ReleaseState(this);
+            state.TrackList = this.TrackList.Add(command.TrackId, new MetadataState(command.TrackId, 
+                                                                                    command.ReleaseId, 
+                                                                                    command.Title, 
+                                                                                    command.Artist, 
+                                                                                    command.Album, 
+                                                                                    command.Genre, 
+                                                                                    command.Number));
+            state.Timestamp = command.Timestamp;
             return state;
         }
     }

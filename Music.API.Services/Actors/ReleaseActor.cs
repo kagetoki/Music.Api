@@ -1,6 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Commands;
+using Music.API.Services.Events;
 using Music.API.Services.States;
 
 namespace Music.API.Services.Actors
@@ -43,6 +44,48 @@ namespace Music.API.Services.Actors
         private void UpdateState(ReleaseUpdateCommand command)
         {
             _state = _state.Update(command);
+        }
+
+        private bool HandleMetadataAdded(MetadataCreateCommand command)
+        {
+            if (!IsMetadataAddValid(command))
+            {
+                return false;
+            }
+            var evt = new MetadataCreated
+            {
+                TrackId = command.TrackId,
+                Album = command.Album,
+                Artist = command.Artist,
+                Genre = command.Genre,
+                Timestamp = command.Timestamp,
+                Title = command.Title
+            };
+            Persist(evt, e => 
+            {
+                _state = _state.AddMetadata(command);
+                TellStateUpdated();
+            });
+            return true;
+        }
+
+        private bool UpdateState(MetadataUpdateCommand command)
+        {
+            
+        }
+
+        private bool IsMetadataAddValid(MetadataCreateCommand command)
+        {
+            if(command == null || command.ReleaseId != PersistenceId)
+            {
+                return false;
+            }
+            //TODO: ping track actor if the track with this ID exists
+            return !string.IsNullOrEmpty(command.Title)
+                    || !string.IsNullOrEmpty(command.Genre)
+                    || !string.IsNullOrEmpty(command.Artist)
+                    || !string.IsNullOrEmpty(command.TrackId)
+                    || !string.IsNullOrEmpty(command.Album);
         }
 
         private bool IsMessageValid(ReleaseUpdateCommand cmd)
