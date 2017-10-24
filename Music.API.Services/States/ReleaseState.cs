@@ -85,5 +85,18 @@ namespace Music.API.Services.States
             state.Timestamp = command.Timestamp;
             return state;
         }
+
+        public ReleaseState UpdateMetadata(MetadataUpdateCommand command)
+        {
+            if (!this.TrackList.ContainsKey(command.TrackId) || command.Timestamp <= this.Timestamp)
+            {
+                return this;
+            }
+            var state = new ReleaseState(this);
+            state.Timestamp = command.Timestamp;
+            var metadata = TrackList[command.TrackId];
+            state.TrackList = state.TrackList.SetItem(command.TrackId, metadata.Update(command));
+            return state;
+        }
     }
 }

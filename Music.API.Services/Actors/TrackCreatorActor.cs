@@ -4,6 +4,7 @@ using Music.API.Interface.Commands;
 using Music.API.Services.Events;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text;
 
 namespace Music.API.Services.Actors
@@ -13,10 +14,13 @@ namespace Music.API.Services.Actors
         public override string PersistenceId => "tracks";
         private long _nextTrackId;
         private ActorPath _readStorageUpdateActor;
+        private ActorPath _releaseCreatorActor;
+        private ImmutableHashSet<string> _trackIds = ImmutableHashSet<string>.Empty;
         public TrackCreatorActor(ActorPath readStorageUpdateActor)
         {
             _readStorageUpdateActor = readStorageUpdateActor;
             Command<TrackCreateCommand>(cmd => HandleTrackCreated(cmd));
+            TellTrackListUpdated();
         }
 
         private bool HandleTrackCreated(TrackCreateCommand cmd)
@@ -35,10 +39,17 @@ namespace Music.API.Services.Actors
             var state = new States.TrackState(trackCreatedEvt.TrackId, trackCreatedEvt.Binary);
             PersistAsync(trackCreatedEvt, c =>
             {
+                _trackIds = _trackIds.Add(c.TrackId);
                 Context.ActorOf(Props.Create(() => 
                                 new TrackActor(state, _readStorageUpdateActor)), trackCreatedEvt.TrackId);
+                TellTrackListUpdated();
             });
             return true;
+        }
+
+        private void TellTrackListUpdated()
+        {
+            Context.ActorSelection(_releaseCreatorActor).Tell(new TrackListUpdated(_trackIds));
         }
     }
 }

@@ -56,5 +56,14 @@ namespace Music.API.Services.Actors
                                && !string.IsNullOrEmpty(cmd.Genre)
                                && !string.IsNullOrEmpty(cmd.Title);
         }
+
+        private void TellAllChildren<T>(T message)
+        {
+            var children = Context.GetChildren();
+            foreach(var child in children)
+            {
+                child.Tell(message);
+            }
+        }
     }
 }
