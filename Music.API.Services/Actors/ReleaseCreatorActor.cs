@@ -13,10 +13,11 @@ namespace Music.API.Services.Actors
         public override string PersistenceId => "releases";
         private ActorPath _readStorageUpdateActor;
         private ImmutableHashSet<string> ExistingTrackIds { get; set; }
-        public ReleaseCreatorActor(ActorPath readStorageUpdateActor)
+        public ReleaseCreatorActor(ActorPath readStorageUpdateActor, ImmutableHashSet<string> existingTrackIds)
         {
             _readStorageUpdateActor = readStorageUpdateActor;
             Command<ReleaseCreateCommand>(cmd => HandleCreateMessage(cmd));
+            ExistingTrackIds = existingTrackIds;
         }
 
         private bool HandleCreateMessage(ReleaseCreateCommand cmd)

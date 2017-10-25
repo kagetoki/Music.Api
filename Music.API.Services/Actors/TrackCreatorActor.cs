@@ -15,10 +15,11 @@ namespace Music.API.Services.Actors
         private long _nextTrackId;
         private ActorPath _readStorageUpdateActor;
         private ActorPath _releaseCreatorActor;
-        private ImmutableHashSet<string> _trackIds = ImmutableHashSet<string>.Empty;
-        public TrackCreatorActor(ActorPath readStorageUpdateActor)
+        private ImmutableHashSet<string> _trackIds;
+        public TrackCreatorActor(ActorPath readStorageUpdateActor, ImmutableHashSet<string> trackIds)
         {
             _readStorageUpdateActor = readStorageUpdateActor;
+            _trackIds = trackIds;
             Command<TrackCreateCommand>(cmd => HandleTrackCreated(cmd));
             TellTrackListUpdated();
         }
