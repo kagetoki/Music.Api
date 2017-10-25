@@ -13,9 +13,9 @@ namespace Music.API.Services.States
         public string Title { get; private set; }
         public string Album { get; private set; }
         public string Genre { get; private set; }
-        public int Number { get; private set; }
+        public int? Number { get; private set; }
 
-        public MetadataState(string trackId, string releaseId, string title, string artist, string album, string genre, int number)
+        public MetadataState(string trackId, string releaseId, string title, string artist, string album, string genre, int? number)
         {
             ReleaseId = releaseId;
             TrackId = trackId;

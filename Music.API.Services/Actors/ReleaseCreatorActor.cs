@@ -3,6 +3,7 @@ using Akka.Persistence;
 using Music.API.Interface.Commands;
 using Music.API.Services.Events;
 using Music.API.Services.States;
+using System.Collections.Immutable;
 
 namespace Music.API.Services.Actors
 {
@@ -11,6 +12,7 @@ namespace Music.API.Services.Actors
         private long _nextReleaseId;
         public override string PersistenceId => "releases";
         private ActorPath _readStorageUpdateActor;
+        private ImmutableHashSet<string> ExistingTrackIds { get; set; }
         public ReleaseCreatorActor(ActorPath readStorageUpdateActor)
         {
             _readStorageUpdateActor = readStorageUpdateActor;
@@ -44,9 +46,20 @@ namespace Music.API.Services.Actors
                     evt.Genre,
                     evt.Cover
                 );
-                var child = Context.ActorOf(Props.Create(() => new ReleaseActor(state, _readStorageUpdateActor)));
+                var child = Context.ActorOf(Props.Create(() => new ReleaseActor(state, ExistingTrackIds, _readStorageUpdateActor)));
                 
             });
+            return true;
+        }
+
+        private bool OnTrackCreated(TrackListUpdated trackListUpdated)
+        {
+            if(trackListUpdated == null || trackListUpdated.TrackIds == null)
+            {
+                return false;
+            }
+            this.ExistingTrackIds = trackListUpdated.TrackIds;
+            TellAllChildren(trackListUpdated);
             return true;
         }
 

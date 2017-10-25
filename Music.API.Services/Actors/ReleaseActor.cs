@@ -3,6 +3,7 @@ using Akka.Persistence;
 using Music.API.Interface.Commands;
 using Music.API.Services.Events;
 using Music.API.Services.States;
+using System.Collections.Immutable;
 
 namespace Music.API.Services.Actors
 {
@@ -10,12 +11,17 @@ namespace Music.API.Services.Actors
     {
         private ActorPath _readStorageUpdateActor;
         private ReleaseState _state;
-        public ReleaseActor(ReleaseState state, ActorPath readStorageUpdateActor)
+        private ImmutableHashSet<string> TrackIds { get; set; }
+        public ReleaseActor(ReleaseState state, ImmutableHashSet<string> exitstingTrackIds, ActorPath readStorageUpdateActor)
         {
             _readStorageUpdateActor = readStorageUpdateActor;
             Command<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
+            Command<TrackListUpdated>(msg => OnTrackListUpdated(msg));
+            Command<MetadataCreateCommand>(m => HandleMetadataAdded(m));
+            Command<MetadataUpdateCommand>(m => OnMetadataUpdated(m));
             Recover<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
             _state = state;
+            TrackIds = exitstingTrackIds;
             TellStateUpdated();
         }
 
@@ -69,23 +75,28 @@ namespace Music.API.Services.Actors
             return true;
         }
 
-        private bool UpdateState(MetadataUpdateCommand command)
+        private bool OnMetadataUpdated(MetadataUpdateCommand command)
         {
-            
+            if(!MetadataUpdateCommand.IsValid(command) 
+                || command.ReleaseId != PersistenceId 
+                || !_state.TrackList.ContainsKey(command.TrackId)
+                || command.Timestamp <= _state.TrackList[command.TrackId].Timestamp)
+            {
+                return false;
+            }
+            Persist(command, cmd =>
+            {
+                _state = _state.UpdateMetadata(cmd);
+                TellStateUpdated();
+            });
+            return true;
         }
 
         private bool IsMetadataAddValid(MetadataCreateCommand command)
         {
-            if(command == null || command.ReleaseId != PersistenceId)
-            {
-                return false;
-            }
-            //TODO: ping track actor if the track with this ID exists
-            return !string.IsNullOrEmpty(command.Title)
-                    || !string.IsNullOrEmpty(command.Genre)
-                    || !string.IsNullOrEmpty(command.Artist)
-                    || !string.IsNullOrEmpty(command.TrackId)
-                    || !string.IsNullOrEmpty(command.Album);
+            return MetadataCreateCommand.IsValid(command) 
+                && command.ReleaseId == PersistenceId 
+                && TrackIds.Contains(command.TrackId);
         }
 
         private bool IsMessageValid(ReleaseUpdateCommand cmd)
@@ -101,6 +112,16 @@ namespace Music.API.Services.Actors
                     || !string.IsNullOrEmpty(cmd.Genre)
                     || !string.IsNullOrEmpty(cmd.Artist)
                     || cmd.Cover != null;
+        }
+
+        private bool OnTrackListUpdated(TrackListUpdated trackListUpdated)
+        {
+            if (trackListUpdated == null || trackListUpdated.TrackIds == null)
+            {
+                return false;
+            }
+            this.TrackIds = trackListUpdated.TrackIds;
+            return true;
         }
     }
 }

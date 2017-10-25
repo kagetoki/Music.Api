@@ -12,7 +12,7 @@ namespace Music.API.Interface.Commands
         public string Artist { get; private set; }
         public string Album { get; private set; }
         public string TrackId { get; private set; }
-        public int Number { get; private set; }
+        public int? Number { get; private set; }
 
         public MetadataCreateCommand(string trackId, string artist, string album, string title, string genre, string releaseId, int number)
         {
@@ -23,6 +23,19 @@ namespace Music.API.Interface.Commands
             TrackId = trackId;
             ReleaseId = releaseId;
             Number = number;
+        }
+
+        public static bool IsValid(MetadataCreateCommand command)
+        {
+            if (command == null || string.IsNullOrEmpty(command.TrackId) || string.IsNullOrEmpty(command.ReleaseId))
+            {
+                return false;
+            }
+            return !string.IsNullOrEmpty(command.Title)
+                    || !string.IsNullOrEmpty(command.Genre)
+                    || !string.IsNullOrEmpty(command.Artist)
+                    || command.Number.HasValue
+                    || !string.IsNullOrEmpty(command.Album);
         }
     }
 }
