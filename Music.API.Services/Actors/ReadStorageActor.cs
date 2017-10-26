@@ -17,6 +17,8 @@ namespace Music.API.Services.Actors
         {
             _releaseProvider = releaseProvider;
             _trackProvider = trackProvider;
+            Receive<ReleaseState>(rs => OnReleaseStateChange(rs));
+            Receive<TrackState>(ts => OnTrackStateChange(ts));
         }
 
         public void OnReleaseStateChange(ReleaseState state)
