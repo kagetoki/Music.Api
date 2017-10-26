@@ -1,11 +1,9 @@
 ﻿using Music.API.Interface.Commands;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 
-namespace Music.API.Services.States
+namespace Music.API.Entities.States
 {
     public class ReleaseState : State
     {

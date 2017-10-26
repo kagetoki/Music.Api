@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Music.API.Services.States
+namespace Music.API.Entities.States
 {
     public class State
     {

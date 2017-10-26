@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Music.API.DataAccess.Abstractions\Music.API.DataAccess.Abstractions.csproj" />
+    <ProjectReference Include="..\Music.API.Entites\Music.API.Entites.csproj" />
     <ProjectReference Include="..\Music.API.Interface\Music.API.Interface.csproj" />
   </ItemGroup>
 

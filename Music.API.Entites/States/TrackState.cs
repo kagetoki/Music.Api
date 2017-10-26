@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Music.API.Services.States
+namespace Music.API.Entities.States
 {
     public class TrackState : State
     {

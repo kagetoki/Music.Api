@@ -1,7 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Commands;
-using Music.API.Services.States;
+using Music.API.Entities.States;
 
 namespace Music.API.Services.Actors
 {

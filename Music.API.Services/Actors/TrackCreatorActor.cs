@@ -1,11 +1,12 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Music.API.Interface.Commands;
-using Music.API.Services.Events;
+using Music.API.Entities.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
+using Music.API.Entities.States;
 
 namespace Music.API.Services.Actors
 {
@@ -37,7 +38,7 @@ namespace Music.API.Services.Actors
                 Timestamp = cmd.Timestamp,
                 TrackId = _nextTrackId.ToString(),
             };
-            var state = new States.TrackState(trackCreatedEvt.TrackId, trackCreatedEvt.Binary);
+            var state = new TrackState(trackCreatedEvt.TrackId, trackCreatedEvt.Binary);
             PersistAsync(trackCreatedEvt, c =>
             {
                 _trackIds = _trackIds.Add(c.TrackId);

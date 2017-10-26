@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
 
-namespace Music.API.Services.Events
+namespace Music.API.Entities.Events
 {
-    class TrackListUpdated : Event
+    public class TrackListUpdated : Event
     {
         public ImmutableHashSet<string> TrackIds { get; private set; }
         public TrackListUpdated(ImmutableHashSet<string> trackIds)

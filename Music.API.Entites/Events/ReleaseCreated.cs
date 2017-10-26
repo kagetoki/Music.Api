@@ -1,4 +1,4 @@
-﻿namespace Music.API.Services.Events
+﻿namespace Music.API.Entities.Events
 {
     public class ReleaseCreated : Event
     {

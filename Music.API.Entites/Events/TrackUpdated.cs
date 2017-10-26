@@ -1,9 +1,9 @@
-﻿using Music.API.Services.States;
+﻿using Music.API.Entities.States;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Music.API.Services.Events
+namespace Music.API.Entities.Events
 {
     public class TrackUpdated : Event
     {

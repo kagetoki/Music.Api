@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Music.API.Services.Events
+namespace Music.API.Entities.Events
 {
     public class TrackCreated : Event
     {
