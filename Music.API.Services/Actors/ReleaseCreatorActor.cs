@@ -3,13 +3,13 @@ using Akka.Persistence;
 using Music.API.Interface.Commands;
 using Music.API.Services.Events;
 using Music.API.Services.States;
+using System;
 using System.Collections.Immutable;
 
 namespace Music.API.Services.Actors
 {
     public class ReleaseCreatorActor : ReceivePersistentActor
     {
-        private long _nextReleaseId;
         public override string PersistenceId => "releases";
         private ActorPath _readStorageUpdateActor;
         private ImmutableHashSet<string> ExistingTrackIds { get; set; }
@@ -17,6 +17,7 @@ namespace Music.API.Services.Actors
         {
             _readStorageUpdateActor = readStorageUpdateActor;
             Command<ReleaseCreateCommand>(cmd => HandleCreateMessage(cmd));
+            Recover<ReleaseCreated>(evt => RecoverOnReleaseCreated(evt));
             ExistingTrackIds = existingTrackIds;
         }
 
@@ -26,20 +27,38 @@ namespace Music.API.Services.Actors
             {
                 return false;
             }
-            PersistAsync(cmd, c => { });
-            _nextReleaseId++;
+
             var releaseCreatedEvent = new ReleaseCreated
             {
                 Artist = cmd.Artist,
                 Cover = cmd.Cover,
-                ReleaseId = _nextReleaseId.ToString(),
+                ReleaseId = Guid.NewGuid().ToString(),
                 Genre = cmd.Genre,
                 Title = cmd.Title,
                 Timestamp = cmd.Timestamp
             };
             PersistAsync(releaseCreatedEvent, (evt) =>
             {
-                var state = new ReleaseState
+                var state = GenerateState(evt);
+                var child = PlaceChildActor(state);
+            });
+            return true;
+        }
+
+        private bool RecoverOnReleaseCreated(ReleaseCreated releaseCreated)
+        {
+            if (!Context.Child(releaseCreated.ReleaseId).IsNobody())
+            {
+                return false;
+            }
+            var state = GenerateState(releaseCreated);
+            PlaceChildActor(state);
+            return true;
+        }
+
+        private ReleaseState GenerateState(ReleaseCreated evt)
+        {
+            return new ReleaseState
                 (
                     evt.ReleaseId,
                     evt.Artist,
@@ -47,12 +66,12 @@ namespace Music.API.Services.Actors
                     evt.Genre,
                     evt.Cover
                 );
-                var child = Context.ActorOf(Props.Create(() => new ReleaseActor(state, ExistingTrackIds, _readStorageUpdateActor)));
-                
-            });
-            return true;
         }
 
+        private IActorRef PlaceChildActor(ReleaseState state)
+        {
+            return Context.ActorOf(Props.Create(() => new ReleaseActor(state, ExistingTrackIds, _readStorageUpdateActor)), state.ReleaseId);
+        }
         private bool OnTrackCreated(TrackListUpdated trackListUpdated)
         {
             if(trackListUpdated == null || trackListUpdated.TrackIds == null)

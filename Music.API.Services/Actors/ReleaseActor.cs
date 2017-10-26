@@ -20,6 +20,9 @@ namespace Music.API.Services.Actors
             Command<MetadataCreateCommand>(m => HandleMetadataAdded(m));
             Command<MetadataUpdateCommand>(m => OnMetadataUpdated(m));
             Recover<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
+            Recover<TrackListUpdated>(msg => OnTrackListUpdated(msg));
+            Recover<MetadataCreateCommand>(m => HandleMetadataAdded(m));
+            Recover<MetadataUpdateCommand>(m => OnMetadataUpdated(m));
             _state = state;
             TrackIds = exitstingTrackIds;
             TellStateUpdated();

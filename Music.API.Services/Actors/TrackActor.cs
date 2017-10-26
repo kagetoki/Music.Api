@@ -15,6 +15,7 @@ namespace Music.API.Services.Actors
             _readStorageUpdateActor = readStorageUpdateActor;
             _state = trackState;
             Command<TrackUpdateCommand>(c => HandleUpdateCommand(c));
+            Recover<TrackUpdateCommand>(c => HandleUpdateCommand(c));
             TellStateUpdated();
         }
 
