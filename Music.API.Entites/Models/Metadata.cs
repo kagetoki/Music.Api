@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Music.API.Interface.Models
+namespace Music.API.Entites.Models
 {
     public class Metadata
     {

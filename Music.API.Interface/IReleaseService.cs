@@ -1,8 +1,5 @@
-﻿using Music.API.Interface.Commands;
-using Music.API.Interface.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Music.API.Entites.Models;
+using Music.API.Entities.Commands;
 
 namespace Music.API.Interface
 {

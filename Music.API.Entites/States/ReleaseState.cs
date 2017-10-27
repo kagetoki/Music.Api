@@ -1,4 +1,4 @@
-﻿using Music.API.Interface.Commands;
+﻿using Music.API.Entities.Commands;
 using System;
 using System.Collections.Immutable;
 using System.Linq;

@@ -1,7 +1,4 @@
-﻿using Music.API.Interface.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Music.API.Entities.Commands;
 
 namespace Music.API.Entities.States
 {

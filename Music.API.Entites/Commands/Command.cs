@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Music.API.Interface.Commands
+namespace Music.API.Entities.Commands
 {
     public class Command
     {

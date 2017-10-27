@@ -1,9 +1,9 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
-using Music.API.Interface.Commands;
 using Music.API.Entities.Events;
 using Music.API.Entities.States;
 using System.Collections.Immutable;
+using Music.API.Entities.Commands;
 
 namespace Music.API.Services.Actors
 {

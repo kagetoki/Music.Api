@@ -1,8 +1,5 @@
-﻿using Music.API.Interface.Commands;
+﻿using Music.API.Entities.Commands;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Music.API.Entities.States
 {
