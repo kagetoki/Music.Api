@@ -13,6 +13,7 @@ namespace Music.API.Entities.States
         public string Title { get; private set; }
         public string Genre { get; private set; }
         public ImmutableDictionary<string, MetadataState> TrackList { get; private set; }
+        public SubscriptionState Subscription { get; private set; }
         
         public ReleaseState(string releaseId, string artist, string title, string genre, byte[] cover = null)
         {
@@ -94,6 +95,20 @@ namespace Music.API.Entities.States
             state.Timestamp = command.Timestamp;
             var metadata = TrackList[command.TrackId];
             state.TrackList = state.TrackList.SetItem(command.TrackId, metadata.Update(command));
+            return state;
+        }
+
+        public ReleaseState AddSubscription(string subscriptionId, SubscriptionCreateCommand command)
+        {
+            var state = new ReleaseState(this);
+            state.Subscription = new SubscriptionState(subscriptionId, command);
+            return state;
+        }
+
+        public ReleaseState ReplaceSubscription(SubscriptionReplaceCommand command)
+        {
+            var state = new ReleaseState(this);
+            state.Subscription = new SubscriptionState(command);
             return state;
         }
     }

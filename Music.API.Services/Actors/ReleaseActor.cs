@@ -4,6 +4,7 @@ using Music.API.Entities.Events;
 using Music.API.Entities.States;
 using System.Collections.Immutable;
 using Music.API.Entities.Commands;
+using System;
 
 namespace Music.API.Services.Actors
 {
@@ -19,10 +20,14 @@ namespace Music.API.Services.Actors
             Command<TrackListUpdated>(msg => OnTrackListUpdated(msg));
             Command<MetadataCreateCommand>(m => HandleMetadataAdded(m));
             Command<MetadataUpdateCommand>(m => OnMetadataUpdated(m));
+            Command<SubscriptionCreateCommand>(c => OnSubscriptionCreate(c));
+            Command<SubscriptionReplaceCommand>(c => OnSubscriptionReplace(c));
             Recover<ReleaseUpdateCommand>(msg => HandleUpdateMessage(msg));
             Recover<TrackListUpdated>(msg => OnTrackListUpdated(msg));
             Recover<MetadataCreateCommand>(m => HandleMetadataAdded(m));
             Recover<MetadataUpdateCommand>(m => OnMetadataUpdated(m));
+            Recover<SubscriptionCreateCommand>(c => OnSubscriptionCreate(c));
+            Recover<SubscriptionReplaceCommand>(c => OnSubscriptionReplace(c));
             _state = state;
             TrackIds = exitstingTrackIds;
             TellStateUpdated();
@@ -93,6 +98,47 @@ namespace Music.API.Services.Actors
                 TellStateUpdated();
             });
             return true;
+        }
+
+        private bool OnSubscriptionCreate(SubscriptionCreateCommand command)
+        {
+            if (!IsSubscriptionValid(command) || _state.Subscription != null)
+            {
+                return false;
+            }
+
+            PersistAsync(command, cmd =>
+            {
+                _state = _state.AddSubscription(Guid.NewGuid().ToString(), command);
+                TellStateUpdated();
+            });
+            return true;
+        }
+
+        private bool OnSubscriptionReplace(SubscriptionReplaceCommand command)
+        {
+            if (!IsSubscriptionValid(command))
+            {
+                return false;
+            }
+
+            PersistAsync(command, cmd =>
+            {
+                _state = _state.ReplaceSubscription(command);
+                TellStateUpdated();
+            });
+            return true;
+        }
+
+        private bool IsSubscriptionValid(SubscriptionCreateCommand command)
+        {
+            return command != null && command.ReleaseId == PersistenceId && command.UtcExpiration > DateTime.UtcNow;
+        }
+
+        private bool IsSubscriptionValid(SubscriptionReplaceCommand command)
+        {
+            return command != null && command.ReleaseId == PersistenceId && command.UtcExpiration > DateTime.UtcNow
+                && _state.Subscription != null && _state.Subscription.SubscriptionId == command.SubscriptionId;
         }
 
         private bool IsMetadataAddValid(MetadataCreateCommand command)
