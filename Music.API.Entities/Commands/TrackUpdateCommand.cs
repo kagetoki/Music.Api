@@ -6,12 +6,16 @@ namespace Music.API.Entities.Commands
 {
     public class TrackUpdateCommand : Command
     {
-        public string TrackId { get; private set; }
-        public byte[] Binary { get; private set; }
+        public string TrackId { get; set; }
+        public byte[] Binary { get; set; }
         public TrackUpdateCommand(string trackId, byte[] binary)
         {
             TrackId = trackId;
             Binary = binary;
+        }
+        public TrackUpdateCommand()
+        {
+
         }
     }
 }

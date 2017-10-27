@@ -6,11 +6,15 @@ namespace Music.API.Entities.Commands
 {
     public class TrackCreateCommand : Command
     {
-        public byte[] Binary { get; private set; }
+        public byte[] Binary { get; set; }
 
         public TrackCreateCommand(byte[] track)
         {
             Binary = track;
+        }
+        public TrackCreateCommand()
+        {
+
         }
     }
 }

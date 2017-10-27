@@ -6,11 +6,11 @@ namespace Music.API.Entities.Commands
 {
     public class ReleaseUpdateCommand : Command
     {
-        public string ReleaseId { get; private set; }
-        public string Artist { get; private set; }
-        public byte[] Cover { get; private set; }
-        public string Title { get; private set; }
-        public string Genre { get; private set; }
+        public string ReleaseId { get; set; }
+        public string Artist { get; set; }
+        public byte[] Cover { get; set; }
+        public string Title { get; set; }
+        public string Genre { get; set; }
         public ReleaseUpdateCommand(string releaseId, string artist, string title, string genre, byte[] cover = null)
         {
             ReleaseId = releaseId;
@@ -18,6 +18,10 @@ namespace Music.API.Entities.Commands
             Title = title;
             Genre = genre;
             Cover = cover;
+        }
+        public ReleaseUpdateCommand()
+        {
+
         }
     }
 }

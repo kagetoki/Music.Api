@@ -6,16 +6,20 @@ namespace Music.API.Entities.Commands
 {
     public class ReleaseCreateCommand : Command
     {
-        public string Artist { get; private set; }
-        public byte[] Cover { get; private set; }
-        public string Title { get; private set; }
-        public string Genre { get; private set; }
+        public string Artist { get; set; }
+        public byte[] Cover { get; set; }
+        public string Title { get; set; }
+        public string Genre { get; set; }
         public ReleaseCreateCommand(string artist, string title, string genre, byte[] cover = null)
         {
             Artist = artist;
             Title = title;
             Genre = genre;
             Cover = cover;
+        }
+        public ReleaseCreateCommand()
+        {
+
         }
     }
 }
