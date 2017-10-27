@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Music.API.Entities
@@ -9,6 +10,7 @@ namespace Music.API.Entities
     public static class InMemoryAppState
     {
         internal static ConcurrentDictionary<string, ReleaseState> Releases = new ConcurrentDictionary<string, ReleaseState>();
+        internal static ConcurrentDictionary<string, ReleaseState> PublishedReleases = new ConcurrentDictionary<string, ReleaseState>();
 
         public static ReleaseState Get(string releaseId)
         {
@@ -17,15 +19,29 @@ namespace Music.API.Entities
             return result;
         }
 
+        public static List<ReleaseState> GetPublishedReleases()
+        {
+            return PublishedReleases.Values.Where(r => r.IsPublished).ToList();
+        }
+
         internal static void AddOrUpdate(ReleaseState release)
         {
-            if (Releases.ContainsKey(release.ReleaseId))
+            AddOrUpdate(Releases, release);
+            if(release.Subscription != null && release.IsPublished)
             {
-                Releases[release.ReleaseId] = release;
+                AddOrUpdate(PublishedReleases, release);
+            }
+        }
+
+        private static void AddOrUpdate(ConcurrentDictionary<string, ReleaseState> storage, ReleaseState release)
+        {
+            if (storage.ContainsKey(release.ReleaseId))
+            {
+                storage[release.ReleaseId] = release;
             }
             else
             {
-                Releases.TryAdd(release.ReleaseId, release);
+                storage.TryAdd(release.ReleaseId, release);
             }
         }
     }

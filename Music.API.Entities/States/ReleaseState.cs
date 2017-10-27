@@ -14,6 +14,8 @@ namespace Music.API.Entities.States
         public string Genre { get; private set; }
         public ImmutableDictionary<string, MetadataState> TrackList { get; private set; }
         public SubscriptionState Subscription { get; private set; }
+        public bool IsPublished => this.Subscription != null && this.Subscription.UtcExpiration > DateTime.UtcNow;
+
         
         public ReleaseState(string releaseId, string artist, string title, string genre, byte[] cover = null)
         {
