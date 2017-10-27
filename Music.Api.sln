@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.Services", "Music
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.Interface", "Music.API.Interface\Music.API.Interface.csproj", "{D46BDB32-0BA3-4133-B830-1CCAB456277A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.Entites", "Music.API.Entites\Music.API.Entites.csproj", "{A09A5541-2D46-4055-8E9A-44C73BE26D23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.Entities", "Music.API.Entities\Music.API.Entities.csproj", "{A09A5541-2D46-4055-8E9A-44C73BE26D23}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.API.DataAccess.Abstractions", "Music.API.DataAccess.Abstractions\Music.API.DataAccess.Abstractions.csproj", "{5D25DB44-E2E0-45ED-B262-0A2DC37183AA}"
 EndProject
