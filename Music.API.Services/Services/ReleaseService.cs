@@ -1,10 +1,8 @@
 ﻿using Music.API.Interface;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Music.API.Entities.Commands;
 using Music.API.Entities.States;
-using Music.API.Entities;
 using Music.API.DataAccess.Abstractions;
 using Music.API.Entities.Events;
 
