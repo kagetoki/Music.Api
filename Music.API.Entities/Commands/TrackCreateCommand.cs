@@ -7,9 +7,11 @@ namespace Music.API.Entities.Commands
     public class TrackCreateCommand : Command
     {
         public byte[] Binary { get; set; }
+        public Guid OwnerId { get; set; }
 
-        public TrackCreateCommand(byte[] track)
+        public TrackCreateCommand(byte[] track, Guid ownerId)
         {
+            OwnerId = ownerId;
             Binary = track;
         }
         public TrackCreateCommand()

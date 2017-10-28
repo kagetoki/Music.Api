@@ -7,6 +7,7 @@ namespace Music.API.Entities.States
 {
     public class ReleaseState : State
     {
+        public Guid OwnerId { get; private set; }
         public string ReleaseId { get; private set; }
         public string Artist { get; private set; }
         public byte[] Cover { get; private set; }
@@ -17,13 +18,14 @@ namespace Music.API.Entities.States
         public bool IsPublished => this.Subscription != null && this.Subscription.UtcExpiration > DateTime.UtcNow;
 
         
-        public ReleaseState(string releaseId, string artist, string title, string genre, byte[] cover = null)
+        public ReleaseState(string releaseId, string artist, string title, string genre, Guid ownerId, byte[] cover = null)
         {
             ReleaseId = releaseId;
             Artist = artist;
             Title = title;
             Genre = genre;
             Cover = cover;
+            OwnerId = ownerId;
             Timestamp = DateTime.UtcNow;
         }
 

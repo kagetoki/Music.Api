@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Music.API.Entities
+namespace Music.API.Services
 {
     public static class InMemoryAppState
     {

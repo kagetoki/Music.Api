@@ -85,7 +85,7 @@ namespace Music.API.Services.Actors
 
         private bool OnMetadataUpdated(MetadataUpdateCommand command)
         {
-            if(!MetadataUpdateCommand.IsValid(command) 
+            if(!CommandValidator.Validate(command).Success 
                 || command.ReleaseId != PersistenceId 
                 || !_state.TrackList.ContainsKey(command.TrackId)
                 || command.Timestamp <= _state.TrackList[command.TrackId].Timestamp)
@@ -143,7 +143,7 @@ namespace Music.API.Services.Actors
 
         private bool IsMetadataAddValid(MetadataCreateCommand command)
         {
-            return MetadataCreateCommand.IsValid(command) 
+            return CommandValidator.Validate(command).Success
                 && command.ReleaseId == PersistenceId 
                 && TrackIds.Contains(command.TrackId);
         }
@@ -156,11 +156,7 @@ namespace Music.API.Services.Actors
             {
                 return false;
             }
-            //Something has to be updated, otherwise nothing changes and we don't need this message
-            return !string.IsNullOrEmpty(cmd.Title)
-                    || !string.IsNullOrEmpty(cmd.Genre)
-                    || !string.IsNullOrEmpty(cmd.Artist)
-                    || cmd.Cover != null;
+            return CommandValidator.Validate(cmd).Success;
         }
 
         private bool OnTrackListUpdated(TrackListUpdated trackListUpdated)

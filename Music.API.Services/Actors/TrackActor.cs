@@ -23,7 +23,7 @@ namespace Music.API.Services.Actors
         {
             if(cmd != null && cmd.Binary != null && cmd.Timestamp > _state.Timestamp)
             {
-                PersistAsync(cmd, (c) =>
+                Persist(cmd, (c) =>
                 {
                     _state = _state.Update(c);
                     TellStateUpdated();

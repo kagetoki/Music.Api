@@ -1,4 +1,6 @@
-﻿namespace Music.API.Entities.Events
+﻿using System;
+
+namespace Music.API.Entities.Events
 {
     public class ReleaseCreated : Event
     {
@@ -7,5 +9,6 @@
         public byte[] Cover { get; set; }
         public string Title { get; set; }
         public string Genre { get; set; }
+        public Guid OwnerId { get; set; }
     }
 }

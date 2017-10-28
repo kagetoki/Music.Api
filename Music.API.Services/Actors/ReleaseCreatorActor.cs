@@ -16,27 +16,18 @@ namespace Music.API.Services.Actors
         public ReleaseCreatorActor(ActorPath readStorageUpdateActor, ImmutableHashSet<string> existingTrackIds)
         {
             _readStorageUpdateActor = readStorageUpdateActor;
-            Command<ReleaseCreateCommand>(cmd => HandleCreateMessage(cmd));
+            Command<ReleaseCreated>(cmd => HandleCreateMessage(cmd));
             Recover<ReleaseCreated>(evt => RecoverOnReleaseCreated(evt));
             ExistingTrackIds = existingTrackIds;
         }
 
-        private bool HandleCreateMessage(ReleaseCreateCommand cmd)
+        private bool HandleCreateMessage(ReleaseCreated releaseCreatedEvent)
         {
-            if (!IsMessageValid(cmd))
+            if (!IsMessageValid(releaseCreatedEvent))
             {
                 return false;
             }
-
-            var releaseCreatedEvent = new ReleaseCreated
-            {
-                Artist = cmd.Artist,
-                Cover = cmd.Cover,
-                ReleaseId = Guid.NewGuid().ToString(),
-                Genre = cmd.Genre,
-                Title = cmd.Title,
-                Timestamp = cmd.Timestamp
-            };
+            
             PersistAsync(releaseCreatedEvent, (evt) =>
             {
                 var state = GenerateState(evt);
@@ -64,6 +55,7 @@ namespace Music.API.Services.Actors
                     evt.Artist,
                     evt.Title,
                     evt.Genre,
+                    evt.OwnerId,
                     evt.Cover
                 );
         }
@@ -83,7 +75,7 @@ namespace Music.API.Services.Actors
             return true;
         }
 
-        private bool IsMessageValid(ReleaseCreateCommand cmd)
+        private bool IsMessageValid(ReleaseCreated cmd)
         {
             return cmd != null && !string.IsNullOrEmpty(cmd.Artist)
                                && !string.IsNullOrEmpty(cmd.Genre)

@@ -13,13 +13,14 @@ namespace Music.API.Entities.Commands
         public string Album { get; set; }
         public string TrackId { get; set; }
         public int? Number { get; set; }
-
+        public Guid OwnerId { get; set; }
         public MetadataCreateCommand()
         {
 
         }
-        public MetadataCreateCommand(string trackId, string artist, string album, string title, string genre, string releaseId, int number)
+        public MetadataCreateCommand(string trackId, string artist, string album, string title, string genre, string releaseId, int number, Guid ownerId)
         {
+            OwnerId = ownerId;
             Artist = artist;
             Album = album;
             Title = title;
@@ -28,18 +29,6 @@ namespace Music.API.Entities.Commands
             ReleaseId = releaseId;
             Number = number;
         }
-
-        public static bool IsValid(MetadataCreateCommand command)
-        {
-            if (command == null || string.IsNullOrEmpty(command.TrackId) || string.IsNullOrEmpty(command.ReleaseId))
-            {
-                return false;
-            }
-            return !string.IsNullOrEmpty(command.Title)
-                    || !string.IsNullOrEmpty(command.Genre)
-                    || !string.IsNullOrEmpty(command.Artist)
-                    || command.Number.HasValue
-                    || !string.IsNullOrEmpty(command.Album);
-        }
+                
     }
 }

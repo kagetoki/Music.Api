@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Music.API.DataAccess.Abstractions\Music.API.DataAccess.Abstractions.csproj" />
+    <ProjectReference Include="..\Music.API.Entities\Music.API.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

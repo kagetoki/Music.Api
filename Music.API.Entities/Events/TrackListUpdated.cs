@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 
 namespace Music.API.Entities.Events
 {
@@ -8,6 +9,7 @@ namespace Music.API.Entities.Events
         public TrackListUpdated(ImmutableHashSet<string> trackIds)
         {
             TrackIds = trackIds;
+            Timestamp = DateTime.UtcNow;
         }
     }
 }

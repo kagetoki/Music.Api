@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.Interface", "Musi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.Entities", "Music.API.Entities\Music.API.Entities.csproj", "{A09A5541-2D46-4055-8E9A-44C73BE26D23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.API.DataAccess.Abstractions", "Music.API.DataAccess.Abstractions\Music.API.DataAccess.Abstractions.csproj", "{5D25DB44-E2E0-45ED-B262-0A2DC37183AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Music.API.DataAccess.Abstractions", "Music.API.DataAccess.Abstractions\Music.API.DataAccess.Abstractions.csproj", "{5D25DB44-E2E0-45ED-B262-0A2DC37183AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Music.API.DataAccess", "Music.API.DataAccess\Music.API.DataAccess.csproj", "{EA61D4E4-94E1-4D2F-959E-C8BE07B3D3C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{5D25DB44-E2E0-45ED-B262-0A2DC37183AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D25DB44-E2E0-45ED-B262-0A2DC37183AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D25DB44-E2E0-45ED-B262-0A2DC37183AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA61D4E4-94E1-4D2F-959E-C8BE07B3D3C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA61D4E4-94E1-4D2F-959E-C8BE07B3D3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA61D4E4-94E1-4D2F-959E-C8BE07B3D3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA61D4E4-94E1-4D2F-959E-C8BE07B3D3C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,6 +10,7 @@ namespace Music.API.Entities.Commands
         public byte[] Cover { get; set; }
         public string Title { get; set; }
         public string Genre { get; set; }
+        public Guid OwnerId { get; set; }
         public ReleaseCreateCommand(string artist, string title, string genre, byte[] cover = null)
         {
             Artist = artist;
