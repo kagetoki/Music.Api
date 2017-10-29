@@ -1,5 +1,7 @@
 ﻿using Music.API.Entities.Commands;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -38,6 +40,27 @@ namespace Music.API.Entities.States
             this.Title = copyFrom.Title;
             this.Timestamp = copyFrom.Timestamp;
             this.TrackList = copyFrom.TrackList;
+        }
+
+        public ReleaseState(string releaseId,
+                            string artist, 
+                            string title, 
+                            string genre, 
+                            Guid ownerId, 
+                            byte[] cover, 
+                            IEnumerable<MetadataState> trackList, 
+                            SubscriptionState subscription, 
+                            DateTime timestamp)
+        {
+            ReleaseId = releaseId;
+            Artist = artist;
+            Title = title;
+            Genre = genre;
+            Cover = cover;
+            OwnerId = ownerId;
+            Timestamp = timestamp;
+            TrackList = trackList.ToImmutableDictionary(m => m.TrackId);
+            Subscription = subscription;
         }
 
         public ReleaseState Update(params ReleaseUpdateCommand[] commands)

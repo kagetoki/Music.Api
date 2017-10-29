@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Cloud.Datastore.V1" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Music.API.DataAccess.Abstractions\Music.API.DataAccess.Abstractions.csproj" />
     <ProjectReference Include="..\Music.API.Entities\Music.API.Entities.csproj" />
   </ItemGroup>
