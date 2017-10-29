@@ -17,7 +17,7 @@ namespace Music.API.Services.Services
             _releaseProvider = releaseProvider;
             _trackProvider = trackProvider;
         }
-        public void AddMetadata(MetadataCreateCommand createMetadata, Guid ownerId)
+        public void AddMetadata(MetadataCreateCommand createMetadata)
         {
             WithValidation(() => CommandValidator.Validate(createMetadata));
 
@@ -73,13 +73,13 @@ namespace Music.API.Services.Services
             return _trackProvider.Get(id);
         }
 
-        public void UpdateMetadata(MetadataUpdateCommand updateMetadata, Guid ownerId)
+        public void UpdateMetadata(MetadataUpdateCommand updateMetadata)
         {
             WithValidation(() => CommandValidator.Validate(updateMetadata));
             ActorModel.TellReleaseActor(updateMetadata.ReleaseId, updateMetadata);
         }
 
-        public void UpdateRelease(ReleaseUpdateCommand updateRelease, Guid ownerId)
+        public void UpdateRelease(ReleaseUpdateCommand updateRelease)
         {
             WithValidation(() => CommandValidator.Validate(updateRelease));
             ActorModel.TellReleaseActor(updateRelease.ReleaseId, updateRelease);

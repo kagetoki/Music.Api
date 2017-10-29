@@ -1,9 +1,7 @@
 ﻿using Akka.Actor;
-using Music.API.DataAccess;
 using Music.API.Services.Actors;
-using System;
 using System.Collections.Immutable;
-using akka.persistence.gcp.datastore;
+using Music.API.DataAccess.Abstractions;
 
 namespace Music.API.Services
 {
@@ -14,14 +12,14 @@ namespace Music.API.Services
         internal static ActorPath TrackPapaPath = ActorPath.Parse("akka://main/user/tracks");
         internal static ActorPath ReadStorageActorPath = ActorPath.Parse("akka://main/user/readStorage");
         
-        public static void Init()
+        public static void Init(IReleaseProvider releaseProvider, ITrackProvider trackProvider)
         {
             
             var config = Akka.Configuration.ConfigurationFactory.ParseString(AKKA_GCP_CONFIG);
             System = ActorSystem.Create("main", config);
             System.ActorOf(Props.Create(() => new ReleaseCreatorActor(ReadStorageActorPath, ImmutableHashSet<string>.Empty)), "releases");
             System.ActorOf(Props.Create(() => new TrackCreatorActor(ReadStorageActorPath, ReleasePapaPath, ImmutableHashSet<string>.Empty)), "tracks");
-            System.ActorOf(Props.Create(() => new ReadStorageActor(new ReleaseProvider(), new TrackProvider())), "readStorage");
+            System.ActorOf(Props.Create(() => new ReadStorageActor(releaseProvider, trackProvider)), "readStorage");
         }
 
         internal static void Tell(ActorPath path, object message)
