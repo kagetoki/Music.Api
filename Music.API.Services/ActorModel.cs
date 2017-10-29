@@ -3,18 +3,22 @@ using Music.API.DataAccess;
 using Music.API.Services.Actors;
 using System;
 using System.Collections.Immutable;
+using akka.persistence.gcp.datastore;
 
 namespace Music.API.Services
 {
     public static class ActorModel
     {
-        internal static ActorSystem System = ActorSystem.Create("main");
+        internal static ActorSystem System;
         internal static ActorPath ReleasePapaPath = ActorPath.Parse("akka://main/user/releases");
         internal static ActorPath TrackPapaPath = ActorPath.Parse("akka://main/user/tracks");
         internal static ActorPath ReadStorageActorPath = ActorPath.Parse("akka://main/user/readStorage");
         
         public static void Init()
         {
+            
+            var config = Akka.Configuration.ConfigurationFactory.ParseString(AKKA_GCP_CONFIG);
+            System = ActorSystem.Create("main", config);
             System.ActorOf(Props.Create(() => new ReleaseCreatorActor(ReadStorageActorPath, ImmutableHashSet<string>.Empty)), "releases");
             System.ActorOf(Props.Create(() => new TrackCreatorActor(ReadStorageActorPath, ReleasePapaPath, ImmutableHashSet<string>.Empty)), "tracks");
             System.ActorOf(Props.Create(() => new ReadStorageActor(new ReleaseProvider(), new TrackProvider())), "readStorage");
@@ -53,5 +57,26 @@ namespace Music.API.Services
         {
             return System.ActorSelection($"{TrackPapaPath.ToString()}/{trackId}");
         }
+
+        private const string AKKA_GCP_CONFIG = @"akka.persistence.journal.datastore-journal {
+  # Type name of the cassandra journal plugin
+  class = ""akka.persistence.gcp.datastore.journal.DatastoreJournal, akka.persistence.gcp.datastore""
+  project-id = ""musicapistore""
+  namespace-id = ""default""
+  # use managed(cloud) or datastore emulator
+  use-managed = ""on""
+  journalentity-kind = ""Journal""
+  gcp-cold-storage = ""off""
+  }
+
+    akka.persistence.snapshot-store.datastore-snapshot-store {
+  # Type name of the cassandra journal plugin
+  class = ""akka.persistence.gcp.datastore.snapshot.DatastoreSnapshotStore, akka.persistence.gcp.datastore""
+  project-id = ""musicapistore""
+  namespace-id = ""default""
+  # use managed(cloud) or datastore emulator
+  use-managed = ""on""
+  snapshotentity-kind = ""Snapshot""
+  }";
     }
 }
